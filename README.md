@@ -1,5 +1,7 @@
 # tweet-patch
 
+[![Build Status](https://travis-ci.org/radiovisual/tweet-patch.svg?branch=master)](https://travis-ci.org/radiovisual/tweet-patch)
+
 > Use the Twitter API return data to convert plain-text back into twitter-ready markup
 
 This module will take the JSON data returned to you by the Twitter API, and use its 
