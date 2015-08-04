@@ -1,0 +1,32 @@
+{
+  "name": "tweet-patch",
+  "version": "1.0.0",
+  "description": "Use the Twitter API return data to convert plain-text back into twitter-ready markup",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiovisual/tweet-patch.git"
+  },
+  "keywords": [
+    "twitter",
+    "tweet",
+    "tweets",
+    "plain-text",
+    "HTML",
+    "JSON",
+    "tweet-patch"
+  ],
+  "author": "Michael Wuergler <senjudev@gmail.com> (http://numetriclabs.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/radiovisual/tweet-patch/issues"
+  },
+  "homepage": "https://github.com/radiovisual/tweet-patch#readme"
+}
