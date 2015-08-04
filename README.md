@@ -15,16 +15,17 @@ var tweetPatch = require('tweet-patch');
 
 // Pass in the returned tweet data, and get twitter-ready HTML in return
 tweetPatch( { text:'@SomeUser, go check out this #awesome #thing http://t.co/a01234!' } )
-/* =>   <a href="https://twitter.com/SomeUser">@SomeUser</a> go check out this 
-        <a href="https://twitter.com/hashtag/awesome">#awesome</a> 
-        <a href="https://twitter.com/hashtag/thing">#thing</a> 
-        <a href="http://t.co/a01234">http://t.co/a01234</a>!
+/* =>
+    <a href="https://twitter.com/SomeUser">@SomeUser</a> go, check out this 
+    <a href="https://twitter.com/hashtag/awesome">#awesome</a> 
+    <a href="https://twitter.com/hashtag/thing">#thing</a> 
+    <a href="http://t.co/a01234">http://t.co/a01234</a>!
 */
 
 ```
 
 ## License
 
-MIT @ [Michael Wuergler](http://numetriclabs.com/);
+MIT @ [Michael Wuergler](http://numetriclabs.com/)
 
 
