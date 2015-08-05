@@ -8,6 +8,11 @@ This module will take the JSON data returned to you by the Twitter API, and use 
 `entities.hashtags`, `entities.urls` and `entities.user_mentions` to rebuild the plain-text tweet
 back into twitter-ready markup.
  
+## Install
+
+```sh
+$ npm install --save tweet-patch
+```
 
 ## Usage
 
