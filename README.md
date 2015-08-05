@@ -16,7 +16,7 @@ back into twitter-ready markup.
 var tweetPatch = require('tweet-patch');
 
 // Pass in the returned tweet data, and get twitter-ready HTML in return
-tweetPatch( { text:'@SomeUser, go check out this #awesome #thing http://t.co/a01234!' } )
+tweetPatch( { text:'@SomeUser, go check out this #awesome #thing http://t.co/a01234!' entities:{ ... }} );
 /* =>
     <a href="https://twitter.com/SomeUser">@SomeUser</a> go, check out this 
     <a href="https://twitter.com/hashtag/awesome">#awesome</a> 
