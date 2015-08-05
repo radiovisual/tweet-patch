@@ -4,6 +4,15 @@ module.exports = function(data){
 
     var txt = data.text;
 
+    // If the tweet data already has HTML, return that.
+    if(data.html){
+        return data.html;
+    }
+
+    if (!data.entities){
+        return txt;
+    }
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     // convert all the hashtags
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
