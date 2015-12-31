@@ -11,14 +11,28 @@ var valid_tweet_markup2 = '<a href="https://twitter.com/mrdoob">@mrdoob</a> afte
 
 describe('tweet-patch', function(){
 
+    it('should expect an object', function(){
+        assert.throws(function(){ tweetpatch([]) }, TypeError, 'tweet-patch expects an object.');
+    });
+
     it('should convert plain-text into twitter-ready markup', function(){
         assert.equal(tweetpatch(test_tweet1), valid_tweet_markup1);
         assert.equal(tweetpatch(test_tweet2), valid_tweet_markup2);
     });
 
-    it('should return an unmodified string if no `entities` exist', function(){
-        var td = { text: "This has no entities" };
-        assert.equal(tweetpatch(td), "This has no entities");
+    it('should build hash links without an `entities` object', function(){
+        var td = { text: "#many #hastags" };
+        assert.equal(tweetpatch(td), '<a href="https://twitter.com/hashtag/many">#many</a> <a href="https://twitter.com/hashtag/hastags">#hastags</a>');
+    });
+
+    it('should build hash links and urls without an `entities` object', function(){
+        var td = { text: "#many #hastags http://url.com" };
+        assert.equal(tweetpatch(td), '<a href="https://twitter.com/hashtag/many">#many</a> <a href="https://twitter.com/hashtag/hastags">#hastags</a> <a href="http://url.com">http://url.com</a>');
+    });
+
+    it('should process multiple duplicate urls without an `entities` object ', function(){
+        var td = { text: "http://url.com http://url.com" };
+        assert.equal(tweetpatch(td), '<a href="http://url.com">http://url.com</a> <a href="http://url.com">http://url.com</a>');
     });
 
     it('should not fail if `entities.hashtags` does not exist', function(){

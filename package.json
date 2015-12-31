@@ -3,7 +3,10 @@
   "version": "1.1.0",
   "description": "Use the Twitter API return data to convert plain-text back into twitter-ready markup",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "get-urls": "^5.0.0",
+    "taghash": "^1.1.0"
+  },
   "devDependencies": {
     "mocha": "^2.2.5"
   },

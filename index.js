@@ -1,16 +1,21 @@
 'use strict';
+var getUrls = require('get-urls');
+var taghash = require('taghash');
 
-module.exports = function(data){
+module.exports = function(data) {
+    if (typeof data !== 'object' || Array.isArray(data)){
+        throw TypeError('tweet-patch expects an object.');
+    }
 
     var txt = data.text;
 
     // If the tweet data already has HTML, return that.
-    if(data.html){
+    if (data.html) {
         return data.html;
     }
 
-    if (!data.entities){
-        return txt;
+    if (!data.entities) {
+        return manualRebuild(txt);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -18,8 +23,8 @@ module.exports = function(data){
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     var hashtags = data.entities.hashtags;
 
-    if(hashtags){
-        hashtags.forEach(function(item, index, array){
+    if (hashtags) {
+        hashtags.forEach(function (item, index, array) {
             txt = txt.replace("#"+item.text, buildHashLink(item.text));
         });
     }
@@ -29,8 +34,8 @@ module.exports = function(data){
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     var urls = data.entities.urls;
 
-    if(urls){
-        urls.forEach(function(item, index,array){
+    if (urls) {
+        urls.forEach(function (item, index,array) {
             txt = txt.replace(item.url, wrapLink(item.url));
         });
     }
@@ -40,8 +45,8 @@ module.exports = function(data){
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     var user_mentions = data.entities.user_mentions;
 
-    if(user_mentions){
-        user_mentions.forEach(function(item, index, array){
+    if (user_mentions) {
+        user_mentions.forEach(function(item, index, array) {
             txt = txt.replace("@"+item.screen_name, wrapUserMention(item.screen_name));
         });
     }
@@ -49,14 +54,33 @@ module.exports = function(data){
     return txt;
 };
 
-function buildHashLink(text){
+/**
+ * Rebuild the string without an `entities` object.
+ *
+ * @note: this will only run if the `entities` object does not exist.
+ * @param {String} str
+ * @returns {String}
+ */
+
+function manualRebuild(str) {
+    var _str = taghash(str);
+
+    var urls = getUrls(str);
+    urls.map(function(item) {
+       _str = _str.replace(new RegExp(item, 'g'), wrapLink(item));
+    });
+
+    return _str;
+}
+
+function buildHashLink(text) {
     return "<a href=\"https://twitter.com/hashtag/"+text+"\">#"+text+"</a>";
 }
 
-function wrapLink(href){
+function wrapLink(href) {
     return "<a href=\""+href+"\">"+href+"</a>";
 }
 
-function wrapUserMention(screenname){
+function wrapUserMention(screenname) {
     return "<a href=\"https://twitter.com/"+screenname+"\">@"+screenname+"</a>";
 }
