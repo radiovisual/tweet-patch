@@ -20,7 +20,7 @@ $ npm install --save tweet-patch
 
 var tweetPatch = require('tweet-patch');
 
-// Pass in the returned tweet data, and get twitter-ready HTML in return
+// Pass in the returned tweet data object, and get twitter-ready HTML in return
 tweetPatch({ 
    text:'@SomeUser, go check out this #awesome #thing http://t.co/a01234!',
    entities:{ ... }
@@ -31,8 +31,10 @@ tweetPatch({
     <a href="https://twitter.com/hashtag/thing">#thing</a> 
     <a href="http://t.co/a01234">http://t.co/a01234</a>!
 */
-
 ```
+
+**Note:** As of v1.2.0 tweet-patch will still attempt to build twitter-friendly markup even without an `entities` object.
+
 
 ## License
 

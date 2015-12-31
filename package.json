@@ -1,6 +1,6 @@
 {
   "name": "tweet-patch",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Use the Twitter API return data to convert plain-text back into twitter-ready markup",
   "main": "index.js",
   "dependencies": {
