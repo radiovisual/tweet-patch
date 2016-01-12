@@ -2,12 +2,14 @@
 
 [![Build Status](https://travis-ci.org/radiovisual/tweet-patch.svg?branch=master)](https://travis-ci.org/radiovisual/tweet-patch)
 
-> Use the Twitter API return data to convert plain-text back into twitter-ready markup
+> Convert plain-text back into twitter-ready markup with or without the Twitter API return data.
 
 This module will take the JSON data returned to you by the Twitter API, and use its 
 `entities.hashtags`, `entities.urls` and `entities.user_mentions` to rebuild the plain-text tweet
 back into twitter-ready markup.
- 
+
+**Note:** As of v1.2.0 tweet-patch will still attempt to build twitter-friendly markup even without an `entities` object.
+
 ## Install
 
 ```sh
@@ -33,7 +35,6 @@ tweetPatch({
 */
 ```
 
-**Note:** As of v1.2.0 tweet-patch will still attempt to build twitter-friendly markup even without an `entities` object.
 
 
 ## License

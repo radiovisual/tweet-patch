@@ -1,6 +1,7 @@
 'use strict';
 var getUrls = require('get-urls');
 var taghash = require('taghash');
+var mentions = require('get-user-mentions');
 
 module.exports = function(data) {
     if (typeof data !== 'object' || Array.isArray(data)){
@@ -65,6 +66,10 @@ module.exports = function(data) {
 function manualRebuild(str) {
     var _str = taghash(str);
 
+    mentions(str).map(function(user){
+        _str = _str.replace(user, wrapUserMention(user));
+    });
+
     var urls = getUrls(str);
     urls.map(function(item) {
        _str = _str.replace(new RegExp(item, 'g'), wrapLink(item));
@@ -82,5 +87,6 @@ function wrapLink(href) {
 }
 
 function wrapUserMention(screenname) {
+    screenname = screenname.replace(/^@/, '');
     return "<a href=\"https://twitter.com/"+screenname+"\">@"+screenname+"</a>";
 }

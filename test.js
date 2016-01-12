@@ -30,6 +30,11 @@ describe('tweet-patch', function(){
         assert.equal(tweetpatch(td), '<a href="https://twitter.com/hashtag/many">#many</a> <a href="https://twitter.com/hashtag/hastags">#hastags</a> <a href="http://url.com">http://url.com</a>');
     });
 
+    it('should build user mentions without an `entities` object', function(){
+        var td = { text: "hello @user1 and @user2!" };
+        assert.equal(tweetpatch(td), 'hello <a href="https://twitter.com/user1">@user1</a> and <a href="https://twitter.com/user2">@user2</a>!');
+    });
+
     it('should process multiple duplicate urls without an `entities` object ', function(){
         var td = { text: "http://url.com http://url.com" };
         assert.equal(tweetpatch(td), '<a href="http://url.com">http://url.com</a> <a href="http://url.com">http://url.com</a>');
