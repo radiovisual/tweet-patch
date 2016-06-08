@@ -60,4 +60,8 @@ describe('tweet-patch', function(){
         assert.equal(tweetpatch(td), "<b>Check out my HTML</b>");
     });
 
+    it('should convert all links', function() {
+        var td = {text: 'What if the #Maldives beautiful marine life would vanish? https://t.co/pIXQvQRqTO #WorldOceansDay https://t.co/BMmV1Pu5BB'};
+        assert.equal(tweetpatch(td), 'What if the <a href="https://twitter.com/hashtag/Maldives">#Maldives</a> beautiful marine life would vanish? <a href="https://t.co/pIXQvQRqTO">https://t.co/pIXQvQRqTO</a> <a href="https://twitter.com/hashtag/WorldOceansDay">#WorldOceansDay</a> <a href="https://t.co/BMmV1Pu5BB">https://t.co/BMmV1Pu5BB</a>');
+    });
 });

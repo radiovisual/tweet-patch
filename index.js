@@ -25,8 +25,8 @@ module.exports = function(data) {
     var hashtags = data.entities.hashtags;
 
     if (hashtags) {
-        hashtags.forEach(function (item, index, array) {
-            txt = txt.replace("#"+item.text, buildHashLink(item.text));
+        hashtags.forEach(function (item) {
+            txt = txt.replace("#" + item.text, buildHashLink(item.text));
         });
     }
 
@@ -36,7 +36,7 @@ module.exports = function(data) {
     var urls = data.entities.urls;
 
     if (urls) {
-        urls.forEach(function (item, index,array) {
+        urls.forEach(function (item) {
             txt = txt.replace(item.url, wrapLink(item.url));
         });
     }
@@ -47,8 +47,8 @@ module.exports = function(data) {
     var user_mentions = data.entities.user_mentions;
 
     if (user_mentions) {
-        user_mentions.forEach(function(item, index, array) {
-            txt = txt.replace("@"+item.screen_name, wrapUserMention(item.screen_name));
+        user_mentions.forEach(function(item) {
+            txt = txt.replace("@" + item.screen_name, wrapUserMention(item.screen_name));
         });
     }
 
@@ -66,20 +66,19 @@ module.exports = function(data) {
 function manualRebuild(str) {
     var _str = taghash(str);
 
-    mentions(str).map(function(user){
+    mentions(str).forEach(function(user){
         _str = _str.replace(user, wrapUserMention(user));
     });
 
-    var urls = getUrls(str);
-    urls.map(function(item) {
-       _str = _str.replace(new RegExp(item, 'g'), wrapLink(item));
+    getUrls(str).forEach(function(url) {
+        _str = _str.replace(new RegExp(url, 'g'), wrapLink(url));
     });
 
     return _str;
 }
 
 function buildHashLink(text) {
-    return "<a href=\"https://twitter.com/hashtag/"+text+"\">#"+text+"</a>";
+    return "<a href=\"https://twitter.com/hashtag/" + text + "\">#" + text + "</a>";
 }
 
 function wrapLink(href) {
@@ -88,5 +87,5 @@ function wrapLink(href) {
 
 function wrapUserMention(screenname) {
     screenname = screenname.replace(/^@/, '');
-    return "<a href=\"https://twitter.com/"+screenname+"\">@"+screenname+"</a>";
+    return "<a href=\"https://twitter.com/" + screenname + "\">@" + screenname + "</a>";
 }
