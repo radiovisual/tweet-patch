@@ -1,1 +1,4 @@
 node_modules
+
+# ignore my test file
+run.js
