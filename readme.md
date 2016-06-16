@@ -7,9 +7,9 @@
 ## Version 2.0
 
 Version 2.0 of this module no longer attempts to locate/use the `data.entities` objects from the Twitter API returned data.
-It will, however, use the `data.entities.urls` array from the Twitter data (if available) to determine if the Twitter API
-has unwillingly attached the url to the tweet at the end of the `tweet.text` property. If so, you can use the new `stripTrailingUrl`
-option to strip it from the return text.
+It will, however, use the `data.entities.urls` array from the Twitter data (if available) to determine if their is a media 
+url attached to the end of the plain-text tweet by the Twitter API. You can use the `stripTrailingUrl` option to remove this
+trailing media url if you are serving plain-text tweets without embedded media support.
 
 
 ## Install
@@ -21,6 +21,7 @@ $ npm install --save tweet-patch
 ## Usage
 
 **Option 01:** Pass in a string with urls, hashtags and user-mentions
+
 ```js
 var tweetPatch = require('tweet-patch');
 
@@ -28,6 +29,7 @@ tweetPatch('@SomeUser, go check out this #awesome #thing http://t.co/a01234!');
 ```
 
 **Option 02:** Pass in a Twitter Object from the Twitter API:
+
 ```js
 var tweetPatch = require('tweet-patch');
 
@@ -41,8 +43,6 @@ const tweetObj = {
     
 tweetPatch(tweetObj);
 ```
-
-
 
 Both examples above would result in the following return string *(formatted for readability)*:
 
@@ -68,7 +68,7 @@ The tweet object returned from the Twitter API, or a string containing hashtags,
 
 ##### hrefProps
 
-Type: `Object|String` <br>
+Type: `Object|String`<br>
 Default: `None`
 
 Pass in an object and the key:value pairs will be assigned to the anchor tags that are created (uses [obj-to-property-string](https://github.com/radiovisual/obj-to-property-string)).
@@ -92,9 +92,9 @@ Type: `Boolean` <br>
 Default: `false`
 
 This is only used if you have supplied a data object returned from the Twitter API, and that object has the `entities.urls`
-property. The reason for this is because we only want to strip the trailing url if Twitter added the url to the end of the `text` 
-property, but didn't register the added url with `entities.urls`. This ensures that we aren't deleting actual urls put there by the
-  tweet author.
+property. The reason for this is because we only want to strip the trailing media url if you are serving plain-text tweets, 
+(no media support) and you want to clean up the tweet text. This option only works when you have supplied a Tweet object with
+Twitter's `entities.urls` property to ensure that we aren't deleting actual urls put there by the tweet author.
   
 ##### useExistingHTML
 
