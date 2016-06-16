@@ -11,8 +11,16 @@ var valid_tweet_markup2 = '<a href="https://twitter.com/mrdoob">@mrdoob</a> afte
 
 describe('tweet-patch', function(){
 
-    it('should expect an object', function(){
-        assert.throws(function(){ tweetpatch([]) }, TypeError, 'tweet-patch expects an object.');
+    it('expects an object', function(){
+        assert.throws(function(){
+            tweetpatch([]);
+        }, TypeError, 'tweet-patch expects an object.');
+    });
+
+    it('expects an object with data.text property', function(){
+        assert.throws(function(){
+            tweetpatch({});
+        }, TypeError, 'tweet-patch expects a string or tweet object with a text property.');
     });
 
     it('should convert plain-text into twitter-ready markup', function(){
@@ -40,28 +48,50 @@ describe('tweet-patch', function(){
         assert.equal(tweetpatch(td), '<a href="http://url.com">http://url.com</a> <a href="http://url.com">http://url.com</a>');
     });
 
-    it('should not fail if `entities.hashtags` does not exist', function(){
-        var td = { text: "This has no entities.hashtags", entities:{symbols:[],user_mentions:[],urls:[]}};
-        assert.equal(tweetpatch(td), "This has no entities.hashtags");
-    });
-
-    it('should not fail if `entities.user_mentions` does not exist', function(){
-        var td = { text: "This has no entities.user_mentions", entities:{hashtags:[],symbols:[],urls:[]}};
-        assert.equal(tweetpatch(td), "This has no entities.user_mentions");
-    });
-
     it('should not fail if `entities.urls` does not exist', function(){
-        var td = { text: "This has no entities.urls", entities:{hashtags:[],symbols:[],user_mentions:[]}};
+        var td = {text: "This has no entities.urls", entities:{hashtags:[],symbols:[],user_mentions:[]}};
         assert.equal(tweetpatch(td), "This has no entities.urls");
     });
 
-    it('should return the `html` string if exists', function(){
-        var td = { text: "This has an html string.", html: "<b>Check out my HTML</b>" };
-        assert.equal(tweetpatch(td), "<b>Check out my HTML</b>");
+    it('should return the `html` string if exists and useExistingHTML"true', function(){
+        var td = {text: "This has an html string.", html: "<b>Check out my HTML</b>"};
+        assert.equal(tweetpatch(td, {useExistingHTML: true}), "<b>Check out my HTML</b>");
     });
 
     it('should convert all links', function() {
         var td = {text: 'What if the #Maldives beautiful marine life would vanish? https://t.co/pIXQvQRqTO #WorldOceansDay https://t.co/BMmV1Pu5BB'};
         assert.equal(tweetpatch(td), 'What if the <a href="https://twitter.com/hashtag/Maldives">#Maldives</a> beautiful marine life would vanish? <a href="https://t.co/pIXQvQRqTO">https://t.co/pIXQvQRqTO</a> <a href="https://twitter.com/hashtag/WorldOceansDay">#WorldOceansDay</a> <a href="https://t.co/BMmV1Pu5BB">https://t.co/BMmV1Pu5BB</a>');
+    });
+
+    it('should strip the trailing url when entities.urls is empty', function() {
+        var td = {text: '#hi https://t.co/123', entities:{hashtags:[],symbols:[],urls:[]}};
+        assert.equal(tweetpatch(td, {stripTrailingUrl:true}), '<a href="https://twitter.com/hashtag/hi">#hi</a>');
+    });
+
+    it('should not strip the trailing url when there is no entities.urls', function() {
+        var td = {text: '#hi https://t.co/123', entities:{hashtags:[],symbols:[]}};
+        assert.equal(tweetpatch(td, {stripTrailingUrl:true}), '<a href="https://twitter.com/hashtag/hi">#hi</a> <a href="https://t.co/123">https://t.co/123</a>');
+    });
+
+    it('should not strip the trailing url when there is no entities', function() {
+        var td = {text: '#hi https://t.co/123'};
+        assert.equal(tweetpatch(td, {stripTrailingUrl:true}), '<a href="https://twitter.com/hashtag/hi">#hi</a> <a href="https://t.co/123">https://t.co/123</a>');
+    });
+
+    it('should not strip the trailing url when string input is used', function() {
+        var td = '#hi https://t.co/123';
+        assert.equal(tweetpatch(td, {stripTrailingUrl:true}), '<a href="https://twitter.com/hashtag/hi">#hi</a> <a href="https://t.co/123">https://t.co/123</a>');
+    });
+
+    it('should accept a string', function() {
+        assert.equal(tweetpatch('#many #hastags'), '<a href="https://twitter.com/hashtag/many">#many</a> <a href="https://twitter.com/hashtag/hastags">#hastags</a>');
+    });
+
+    it('hrefProps: string', function() {
+        assert.equal(tweetpatch('#hi https://t.co/123', {hrefProps: 'class="myClass"'}), '<a href="https://twitter.com/hashtag/hi">#hi</a> <a href="https://t.co/123" class="myClass">https://t.co/123</a>');
+    });
+
+    it('hrefProps: object', function() {
+        assert.equal(tweetpatch('#hi https://t.co/123', {hrefProps: {class: 'myClass'}}), '<a href="https://twitter.com/hashtag/hi">#hi</a> <a href="https://t.co/123" class="myClass">https://t.co/123</a>');
     });
 });

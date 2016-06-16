@@ -2,90 +2,83 @@
 var getUrls = require('get-urls');
 var taghash = require('taghash');
 var mentions = require('get-user-mentions');
+var propertyString = require('obj-to-property-string');
+var objectAssign = require('object-assign');
 
-module.exports = function(data) {
-    if (typeof data !== 'object' || Array.isArray(data)){
-        throw TypeError('tweet-patch expects an object.');
-    }
+module.exports = function (data, opts) {
+	var txt;
+	var dataType = typeof data;
 
-    var txt = data.text;
+	if (dataType === 'string') {
+		txt = data;
+	} else if (dataType === 'object' && data.text) {
+		txt = data.text;
+	} else {
+		throw new TypeError('tweet-patch expects a string or tweet object with a text property.');
+	}
 
-    // If the tweet data already has HTML, return that.
-    if (data.html) {
-        return data.html;
-    }
+	opts = opts || {};
 
-    if (!data.entities) {
-        return manualRebuild(txt);
-    }
+	var defaults = {
+		useExistingHTML: false,
+		stripTrailingUrl: false,
+		hrefProps: {}
+	};
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    // convert all the hashtags
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    var hashtags = data.entities.hashtags;
+	opts = objectAssign(defaults, opts);
 
-    if (hashtags) {
-        hashtags.forEach(function (item) {
-            txt = txt.replace("#" + item.text, buildHashLink(item.text));
-        });
-    }
+	var propString;
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    // convert all the urls
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    var urls = data.entities.urls;
+	if (typeof opts.hrefProps === 'object') {
+		propString = propertyString(opts.hrefProps);
+	} else if (typeof opts.hrefProps === 'string') {
+		propString = opts.hrefProps;
+	}
 
-    if (urls) {
-        urls.forEach(function (item) {
-            txt = txt.replace(item.url, wrapLink(item.url));
-        });
-    }
+	if (opts.useExistingHTML && data.html) {
+		return data.html;
+	}
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    // convert all the user mentions
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    var user_mentions = data.entities.user_mentions;
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+	// convert all the urls
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+	var allUrls = getUrls(txt);
+	var twitterUrls = (data.entities && data.entities.urls) ? data.entities.urls : null;
 
-    if (user_mentions) {
-        user_mentions.forEach(function(item) {
-            txt = txt.replace("@" + item.screen_name, wrapUserMention(item.screen_name));
-        });
-    }
+	// Do we want to strip the trailing url? Only in the condition that we are using a
+	// Twitter Object with entities.urls and there is at least one url in the entire tweet text.
+	if (opts.stripTrailingUrl && dataType === 'object' && allUrls.length > 0 && twitterUrls && twitterUrls.length === 0) {
+		var trailingUrl = allUrls.pop();
+		txt = txt.replace(trailingUrl, '').trim();
+	}
 
-    return txt;
+	allUrls.forEach(function (url) {
+		txt = txt.replace(new RegExp(url, 'g'), wrapLink(url, propString));
+	});
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+	// convert all the user mentions
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+	mentions(txt).forEach(function (user) {
+		txt = txt.replace(user, wrapUserMention(user));
+	});
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+	// convert all the hashtags
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+	txt = taghash(txt);
+
+	return txt;
 };
 
-/**
- * Rebuild the string without an `entities` object.
- *
- * @note: this will only run if the `entities` object does not exist.
- * @param {String} str
- * @returns {String}
- */
-
-function manualRebuild(str) {
-    var _str = taghash(str);
-
-    mentions(str).forEach(function(user){
-        _str = _str.replace(user, wrapUserMention(user));
-    });
-
-    getUrls(str).forEach(function(url) {
-        _str = _str.replace(new RegExp(url, 'g'), wrapLink(url));
-    });
-
-    return _str;
-}
-
-function buildHashLink(text) {
-    return "<a href=\"https://twitter.com/hashtag/" + text + "\">#" + text + "</a>";
-}
-
-function wrapLink(href) {
-    return "<a href=\""+href+"\">"+href+"</a>";
+function wrapLink(href, props) {
+	if ((props.trim && props.trim() !== '') || (typeof props === 'object' && !Object.keys(props).length)) {
+		props = ' ' + props;
+	}
+	return '<a href="' + href + '"' + props + '>' + href + '</a>';
 }
 
 function wrapUserMention(screenname) {
-    screenname = screenname.replace(/^@/, '');
-    return "<a href=\"https://twitter.com/" + screenname + "\">@" + screenname + "</a>";
+	screenname = screenname.replace(/^@/, '');
+	return '<a href="https://twitter.com/' + screenname + '">@' + screenname + '</a>';
 }

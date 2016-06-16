@@ -1,18 +1,21 @@
 {
   "name": "tweet-patch",
-  "version": "1.2.1",
-  "description": "Convert plain-text back into twitter-ready markup with or without the Twitter API return data.",
+  "version": "2.0.0",
+  "description": "Convert plain-text back into twitter-ready markup.",
   "main": "index.js",
   "dependencies": {
     "get-urls": "^5.0.0",
     "get-user-mentions": "^1.0.1",
+    "obj-to-property-string": "^1.0.1",
+    "object-assign": "^4.1.0",
     "taghash": "^1.1.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "xo": "^0.16.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "xo && mocha"
   },
   "repository": {
     "type": "git",
@@ -32,5 +35,10 @@
   "bugs": {
     "url": "https://github.com/radiovisual/tweet-patch/issues"
   },
-  "homepage": "https://github.com/radiovisual/tweet-patch#readme"
+  "homepage": "https://github.com/radiovisual/tweet-patch#readme",
+  "xo": {
+    "ignores": [
+      "test.js"
+    ]
+  }
 }
