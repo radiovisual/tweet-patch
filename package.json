@@ -1,6 +1,6 @@
 {
   "name": "tweet-patch",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Convert plain-text back into twitter-ready markup.",
   "main": "index.js",
   "dependencies": {
