@@ -42,7 +42,7 @@ module.exports = function (data, opts) {
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 	// convert all the urls
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-	var allUrls = getUrls(txt);
+	var allUrls = getUrls(txt) || [];
 	var twitterUrls = (data.entities && data.entities.urls) ? data.entities.urls : null;
 
 	// Do we want to strip the trailing url? Only in the condition that we are using a
@@ -59,7 +59,8 @@ module.exports = function (data, opts) {
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 	// convert all the user mentions
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-	mentions(txt).forEach(function (user) {
+	var userMentions = mentions(txt) || [];
+	userMentions.forEach(function (user) {
 		txt = txt.replace(user, wrapUserMention(user));
 	});
 

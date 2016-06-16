@@ -1,12 +1,12 @@
 {
   "name": "tweet-patch",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Convert plain-text back into twitter-ready markup.",
   "main": "index.js",
   "dependencies": {
     "get-urls": "^5.0.0",
     "get-user-mentions": "^1.0.1",
-    "obj-to-property-string": "^1.0.1",
+    "obj-to-property-string": "^1.0.2",
     "object-assign": "^4.1.0",
     "taghash": "^1.1.0"
   },
