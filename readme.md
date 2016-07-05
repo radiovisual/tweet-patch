@@ -7,7 +7,7 @@
 ## Version 2.0
 
 Version 2.0 of this module no longer attempts to locate/use the `data.entities` objects from the Twitter API returned data.
-It will, however, use the `data.entities.urls` array from the Twitter data (if available) to determine if their is a media 
+It will, however, use the `data.entities.urls` array from the Twitter data (if available) to determine if there is a media 
 url attached to the end of the plain-text tweet by the Twitter API. You can use the `stripTrailingUrl` option to remove this
 trailing media url if you are serving plain-text tweets without embedded media support.
 
@@ -20,7 +20,7 @@ $ npm install --save tweet-patch
 
 ## Usage
 
-**Option 01:** Pass in a string with urls, hashtags and user-mentions
+**Option 01:** Pass in a string with urls, hashtags and user-mentions:
 
 ```js
 var tweetPatch = require('tweet-patch');
@@ -60,7 +60,7 @@ Both examples above would result in the following return string *(formatted for 
 #### data
 
 *Required* <br>
-Type: `object|string`
+Type: `object` `string`
 
 The tweet object returned from the Twitter API, or a string containing hashtags, urls and user-mentions.
 
@@ -68,7 +68,7 @@ The tweet object returned from the Twitter API, or a string containing hashtags,
 
 ##### hrefProps
 
-Type: `Object|String`<br>
+Type: `object` `string`<br>
 Default: `None`
 
 Pass in an object and the key:value pairs will be assigned to the anchor tags that are created (uses [obj-to-property-string](https://github.com/radiovisual/obj-to-property-string)).
