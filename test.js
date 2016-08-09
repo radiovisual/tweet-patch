@@ -8,6 +8,9 @@ var valid_tweet_markup1 = 'Great idea to help save the planet: <a href="https://
 var test_tweet2 = {created_at:"Tue May 26 10:47:36 +0000 2015",id:0x85ed22bd916a000,id_str:"603150485881790464",text:'@mrdoob after pondering the implications of "cake printing", I concluded that the world is almost ready! 😄 And thanks, I had an awesome day!',geo:null,coordinates:null,place:null,contributors:null,is_quote_status:!1,retweet_count:0,favorite_count:1,entities:{hashtags:[],symbols:[],user_mentions:[{screen_name:"mrdoob",name:"Ricardo Cabello",id:20733754,id_str:"20733754",indices:[0,7]}],urls:[]},favorited:!1,retweeted:!1,lang:"en"};
 var valid_tweet_markup2 = '<a href="https://twitter.com/mrdoob">@mrdoob</a> after pondering the implications of "cake printing", I concluded that the world is almost ready! 😄 And thanks, I had an awesome day!';
 
+
+
+
 describe('tweet-patch', function(){
 
     it('expects an object', function(){
@@ -93,4 +96,9 @@ describe('tweet-patch', function(){
     it('hrefProps: object', function() {
         assert.equal(tweetpatch('#hi https://t.co/123', {hrefProps: {class: 'myClass'}}), '<a href="https://twitter.com/hashtag/hi">#hi</a> <a href="https://t.co/123" class="myClass">https://t.co/123</a>');
     });
+
+    it('fails gracefully on RegExp error ', function() {
+        assert.equal(tweetpatch('Parenthesis around the url: (like this: https://t.co/a5MprWKcmj). This will fail the RegExp test'), 'Parenthesis around the url: (like this: <a href="https://t.co/a5MprWKcmj)">https://t.co/a5MprWKcmj)</a>. This will fail the RegExp test');
+    });
 });
+

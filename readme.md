@@ -104,6 +104,11 @@ Default: `false`
 This is only used if you have supplied a data object returned from the Twitter API, and the Twitter API has supplied
 an `html` property on that object for you.
 
+## Known Limitations
+
+- Some tweets will be formatted in a way that makes it impossible to accurately parse the data. For example, if a url is
+typed inside of parenthesis: `(http://t.co/foo)` tweet-patch will see the closing parenthesis as part of the url. For more
+information, see issue [#8](https://github.com/radiovisual/tweet-patch/issues/8).
 
 ## License
 

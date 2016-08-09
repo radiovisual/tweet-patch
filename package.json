@@ -4,6 +4,7 @@
   "description": "Convert plain-text back into twitter-ready markup.",
   "main": "index.js",
   "dependencies": {
+    "escape-string-regexp": "^1.0.5",
     "get-urls": "^5.0.0",
     "get-user-mentions": "^1.0.1",
     "obj-to-property-string": "^1.0.2",
@@ -38,7 +39,8 @@
   "homepage": "https://github.com/radiovisual/tweet-patch#readme",
   "xo": {
     "ignores": [
-      "test.js"
+      "test.js",
+      "run.js"
     ]
   }
 }

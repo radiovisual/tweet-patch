@@ -4,6 +4,7 @@ var taghash = require('taghash');
 var mentions = require('get-user-mentions');
 var propertyString = require('obj-to-property-string');
 var objectAssign = require('object-assign');
+var escapeStringRegexp = require('escape-string-regexp');
 
 module.exports = function (data, opts) {
 	var txt;
@@ -53,7 +54,13 @@ module.exports = function (data, opts) {
 	}
 
 	allUrls.forEach(function (url) {
-		txt = txt.replace(new RegExp(url, 'g'), wrapLink(url, propString));
+		try {
+			txt = txt.replace(new RegExp(url, 'g'), wrapLink(url, propString));
+		} catch (err) {
+			if (err.message.indexOf('Invalid regular expression') > -1) {
+				txt = txt.replace(new RegExp(escapeStringRegexp(url), 'g'), wrapLink(url, propString));
+			}
+		}
 	});
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
